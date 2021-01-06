@@ -4,12 +4,20 @@ import * as Conf from './conf.js'
 export default class Game {
     constructor() {
         this.background = "#FFFFFF";
-        this.circles = [];
         this.startGame();
     }
 
     startGame() {
-        for (let i = 1; i <= 5; i++) {
+        this.level = 1;
+        this.score = 0;
+        this.reloadCircles();
+    }
+
+    reloadCircles() {
+        this.point = 100 +  Math.round(this.level / 5) * 50;
+        this.circles = [];
+        const maxCircle = 4 + Math.round(this.level / 5);
+        for (let i = 1; i <= maxCircle; i++) {
             this.circles.push(new Circle(this.getRandomPosition(), i))
         }
     }
@@ -35,7 +43,8 @@ export default class Game {
     }
 
     update(progress) {
-        // console.log(progress);
+        this.point -= progress / 100;
+        console.log(progress);
     }
 
     draw(ctx) {
@@ -43,6 +52,17 @@ export default class Game {
         this.circles.forEach((circle) => {
             circle.draw(ctx);
         });
+        this.drawUI(ctx);
+    }
+
+    drawUI(ctx) {
+        ctx.fillStyle = "#000000";
+        ctx.font = '100 px serif';
+        ctx.fillText("Point : +" + Math.round(this.point.toString()), 5, 40);
+
+        ctx.fillStyle = "#000000";
+        ctx.font = '100 px serif';
+        ctx.fillText("Score : " + Math.round(this.score.toString()), 5, 80);
     }
 
     drawBackground(ctx) {
