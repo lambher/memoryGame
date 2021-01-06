@@ -3,10 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script data-ad-client="ca-pub-3715500774196665" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script type="module" src="js/main.js"></script>
+    <link rel="stylesheet" href="css/modal.css">
     <title>Memory Game</title>
 </head>
 <body>
-    <canvas id="canvas" width="400px" height="400px"></canvas>
+    <div>
+        <canvas id="canvas" width="400px" height="400px"></canvas>
+        <button id="save">Save your high score</button>
+    </div>
+
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="my_score">Your score : </p>
+            <p>Enter your information</p>
+            <input placeholder="Pseudo" type="text" id="name" name="name" required minlength="4" maxlength="256" size="30">
+            <p></p>
+            <input placeholder="Email" type="email" id="email" name="email" required minlength="4" maxlength="256" size="30">
+            <p></p>
+            <input placeholder="password" type="password" id="password" name="password" required minlength="4" maxlength="256" size="30">
+            <p><button id="signin">Save my score</button></p>
+        </div>
+  </div>
 </body>
 </html>

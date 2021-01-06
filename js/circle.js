@@ -9,16 +9,16 @@ export default class Circle {
     }
 
     dist(x, y) {
-        const xa = x;
+        const xa = Math.round(x);
         const xb = this.position.x;
-        const ya = y;
+        const ya = Math.round(y);
         const yb = this.position.y;
 
         return Math.sqrt(Math.pow((xb -xa), 2) + Math.pow((yb -ya), 2));
     }
 
     colides(x, y) {
-        return this.dist(x, y) < this.size;
+        return this.dist(x, y) < this.size * 1.3;
     }
 
     draw(ctx, visible) {
@@ -27,6 +27,7 @@ export default class Circle {
         ctx.beginPath();
         ctx.arc(this.position.x, this.position.y, this.size, 0, 2 * Math.PI, false);
         ctx.fill();
+
         if (visible) {
             ctx.fillStyle = "#FFFFFF";
             ctx.font = (SIZE).toString() + 'px serif';

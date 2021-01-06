@@ -2,9 +2,14 @@ import Circle, {SIZE} from "./circle.js";
 import * as Conf from './conf.js'
 
 export default class Game {
-    constructor() {
+    constructor(cookie) {
+        this.cookie = cookie;
         this.background = "#FFFFFF";
         this.startGame();
+    }
+
+    getHighScore() {
+        return Math.round(this.best);
     }
 
     startGame() {
@@ -19,9 +24,6 @@ export default class Game {
     reloadCircles() {
         this.currentNumber = 1;
         this.visible = true;
-        setTimeout(() => {
-            this.visible = false;
-        }, 2000);
         this.point = 100 +  Math.round(this.level / 5) * 50;
         this.circles = [];
         const maxCircle = 4 + Math.round(this.level / 5);
@@ -51,12 +53,9 @@ export default class Game {
     }
 
     update(progress) {
-        if (!this.visible) {
-            this.point -= progress / 100;
-        }
+        this.point -= progress / 100;
         if (this.point <= 0) {
             this.point = 0;
-            this.loose();
         }
     }
 
@@ -88,13 +87,13 @@ export default class Game {
     }
 
     click(x, y, ctx) {
-        if (this.visible) {
-            return
-        }
         for (let i = 0; i < this.circles.length; i++) {
             const circle = this.circles[i];
             if (circle.colides(x, y)) {
-                if (circle.number == this.currentNumber) {
+                if (circle.number === this.currentNumber) {
+                    if (this.currentNumber === 1) {
+                        this.visible = false;
+                    }
                     this.circles.splice(i, 1);
                     this.currentNumber++;
                     this.checkWin();
@@ -129,37 +128,14 @@ export default class Game {
     }
 
     saveStats() {
-        setCookie("best", this.best, 99999);
+        this.cookie.set("best", this.best, 99999);
     }
 
     loadStats() {
-        const value = getCookie("best");
+        const value = this.cookie.get("best");
         if (value) {
             this.best = value;
         }
     }
 
-}
-
-function setCookie(name,value,days) {
-    var expires = "";
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-}
-function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-}
-function eraseCookie(name) {   
-    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
