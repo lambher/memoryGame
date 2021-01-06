@@ -8,12 +8,18 @@ export default class Game {
     }
 
     startGame() {
+        this.best = 0;
         this.level = 1;
         this.score = 0;
         this.reloadCircles();
     }
 
     reloadCircles() {
+        this.currentNumber = 1;
+        this.visible = true;
+        setTimeout(() => {
+            this.visible = false;
+        }, 2000);
         this.point = 100 +  Math.round(this.level / 5) * 50;
         this.circles = [];
         const maxCircle = 4 + Math.round(this.level / 5);
@@ -43,14 +49,19 @@ export default class Game {
     }
 
     update(progress) {
-        this.point -= progress / 100;
-        console.log(progress);
+        if (!this.visible) {
+            this.point -= progress / 100;
+        }
+        if (this.point <= 0) {
+            this.point = 0;
+            this.loose();
+        }
     }
 
     draw(ctx) {
         this.drawBackground(ctx);
         this.circles.forEach((circle) => {
-            circle.draw(ctx);
+            circle.draw(ctx, this.visible);
         });
         this.drawUI(ctx);
     }
@@ -59,10 +70,14 @@ export default class Game {
         ctx.fillStyle = "#000000";
         ctx.font = '100 px serif';
         ctx.fillText("Point : +" + Math.round(this.point.toString()), 5, 40);
-
+        
         ctx.fillStyle = "#000000";
         ctx.font = '100 px serif';
         ctx.fillText("Score : " + Math.round(this.score.toString()), 5, 80);
+
+        ctx.fillStyle = "#000000";
+        ctx.font = '100 px serif';
+        ctx.fillText("Best : " + Math.round(this.best.toString()), 5, 120);
     }
 
     drawBackground(ctx) {
@@ -70,5 +85,43 @@ export default class Game {
         ctx.fillRect(0, 0, Conf.WINDOW_X, Conf.WINDOW_Y);
     }
 
+    click(x, y, ctx) {
+        if (this.visible) {
+            return
+        }
+        for (let i = 0; i < this.circles.length; i++) {
+            const circle = this.circles[i];
+            if (circle.colides(x, y)) {
+                if (circle.number == this.currentNumber) {
+                    this.circles.splice(i, 1);
+                    this.currentNumber++;
+                    this.checkWin();
+                } else {
+                    this.loose();
+                }
+                return ;
+            }
+        }      
+    }
+
+    loose() {
+        if (this.score > this.best) {
+            this.best = this.score;
+        }
+        this.level = 1;
+        this.score = 0;
+        this.reloadCircles();
+    }
+
+    checkWin() {
+        if (this.circles.length === 0) {
+            this.level++;
+            this.score += this.point;
+            if (this.score > this.best) {
+                this.best = this.score;
+            }
+            this.reloadCircles();
+        }
+    }
 
 }

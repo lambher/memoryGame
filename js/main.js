@@ -9,6 +9,8 @@ const game = new Game();
 ctx.canvas.width  = Conf.WINDOW_X;
 ctx.canvas.height = Conf.WINDOW_Y;
 
+canvas.addEventListener('click', onCanvasClick, false);
+
 function update(progress) {
     game.update(progress);
 }
@@ -18,14 +20,21 @@ function draw() {
 }
 
 function loop(timestamp) {
-    var progress = timestamp - lastRender
+    var progress = timestamp - lastRender;
   
-    update(progress)
-    draw()
+    update(progress);
+    draw();
   
-    lastRender = timestamp
-    window.requestAnimationFrame(loop)
+    lastRender = timestamp;
+    window.requestAnimationFrame(loop);
   }
 
-var lastRender = 0
-window.requestAnimationFrame(loop)
+var lastRender = 0;
+window.requestAnimationFrame(loop);
+
+function onCanvasClick(ev) {
+    var x = ev.clientX;
+    var y = ev.clientY;
+
+    game.click(x, y, ctx);
+}

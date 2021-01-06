@@ -17,16 +17,21 @@ export default class Circle {
         return Math.sqrt(Math.pow((xb -xa), 2) + Math.pow((yb -ya), 2));
     }
 
-    draw(ctx) {
+    colides(x, y) {
+        return this.dist(x, y) < this.size;
+    }
+
+    draw(ctx, visible) {
 
         ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.position.x, this.position.y, this.size, 0, 2 * Math.PI, false);
         ctx.fill();
-
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = (SIZE).toString() + 'px serif';
-        ctx.fillText(this.number.toString(), this.position.x - SIZE / 4, this.position.y + SIZE / 4);
+        if (visible) {
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = (SIZE).toString() + 'px serif';
+            ctx.fillText(this.number.toString(), this.position.x - SIZE / 4, this.position.y + SIZE / 4);
+        }
     }
     
 }
