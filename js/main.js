@@ -95,9 +95,19 @@ function loop(timestamp) {
 var lastRender = 0;
 window.requestAnimationFrame(loop);
 
-function onCanvasClick(ev) {
-    var x = ev.clientX;
-    var y = ev.clientY;
+function onCanvasClick(e) {
+    var x;
+    var y;
+    if (e.pageX || e.pageY) { 
+        x = e.pageX;
+        y = e.pageY;
+    }
+    else { 
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+    } 
+    x -= canvas.offsetLeft;
+    y -= canvas.offsetTop;
 
     game.click(x, y, ctx);
 }

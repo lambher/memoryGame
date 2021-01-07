@@ -1,2 +1,2 @@
-export let WINDOW_X = 500;
-export let WINDOW_Y = 500;
+export let WINDOW_X = 800;
+export let WINDOW_Y = 800;

@@ -1,0 +1,20 @@
+#game {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#save {
+    margin-top: 10px;
+
+}
+
+.button {
+    background-color: black;
+    color: #00FF00;
+}
+
+#body {
+    background-color: black;
+}

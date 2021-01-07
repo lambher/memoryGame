@@ -7,12 +7,13 @@
     <script data-ad-client="ca-pub-3715500774196665" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script type="module" src="js/main.js"></script>
     <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/game.css">
     <title>Memory Game</title>
 </head>
-<body>
-    <div>
+<body id="body">
+    <div id="game">
         <canvas id="canvas" width="400px" height="400px"></canvas>
-        <button id="save">Save your high score</button>
+        <button class="button" id="save">Save your high score</button>
     </div>
 
 
@@ -26,7 +27,7 @@
             <input placeholder="Email" type="email" id="email" name="email" required minlength="4" maxlength="256" size="30">
             <p></p>
             <input placeholder="password" type="password" id="password" name="password" required minlength="4" maxlength="256" size="30">
-            <p><button id="signin">Save my score</button></p>
+            <p><button class="button" id="signin">Save my score</button></p>
         </div>
   </div>
 </body>

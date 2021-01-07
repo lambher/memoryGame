@@ -1,11 +1,34 @@
-import Circle, {SIZE} from "./circle.js";
+import Square, {SIZE} from "./square.js";
 import * as Conf from './conf.js'
 
 export default class Game {
     constructor(cookie) {
+        this.loadSound();
+
         this.cookie = cookie;
-        this.background = "#FFFFFF";
+        this.background = "#000000";
+        this.lastScore = 0;
         this.startGame();
+    }
+
+    loadSound() {
+        this.clickSound = new Audio('./assets/sounds/click.mp3');
+        this.winSound = new Audio('./assets/sounds/win.mp3');
+        this.looseSound = new Audio('./assets/sounds/loose.mp3');
+        this.loadMusic();
+       
+    }
+
+    loadMusic() {
+        const nb = Math.round(Math.random() * 5);
+        const path = './assets/sounds/music'+ nb.toString() + '.mp3';
+        console.log(path);
+        this.gameSong = new Audio(path);
+        this.gameSong.volume = 0.1;
+        this.gameSong.addEventListener("ended", function(){
+            this.loadMusic();
+       });
+       this.gameSong.play();
     }
 
     getHighScore() {
@@ -18,33 +41,40 @@ export default class Game {
 
         this.level = 1;
         this.score = 0;
-        this.reloadCircles();
+        this.reloadSquares();
     }
 
-    reloadCircles() {
+    reloadSquares() {
         this.currentNumber = 1;
         this.visible = true;
         this.point = 100 +  Math.round(this.level / 5) * 50;
-        this.circles = [];
-        const maxCircle = 4 + Math.round(this.level / 5);
-        for (let i = 1; i <= maxCircle; i++) {
-            this.circles.push(new Circle(this.getRandomPosition(), i))
+        this.squares = [];
+        const maxSquare = 4 + Math.round(this.level / 5);
+        for (let i = 1; i <= maxSquare; i++) {
+            this.squares.push(new Square(this.getRandomPosition(), i))
         }
     }
 
     getRandomPosition() {
         const x = Math.random() * (Conf.WINDOW_X - SIZE * 4) + SIZE;
         const y = Math.random() * (Conf.WINDOW_Y - SIZE * 4) + SIZE;
-        if (this.collideWithCircle(x, y)) {
+        if (this.collideWithUI(x, y)) {
+            return this.getRandomPosition();
+        }
+        if (this.collideWithSquare(x, y)) {
             return this.getRandomPosition();
         }   
         return {x: x, y: y};
     }
 
-    collideWithCircle(x, y) {
-        for (let i = 0; i < this.circles.length; i++) {
-            const circle = this.circles[i];
-            if (circle.dist(x, y) < SIZE * 2) {
+    collideWithUI(x, y) {
+        return x < 150 & y < 170
+    }
+
+    collideWithSquare(x, y) {
+        for (let i = 0; i < this.squares.length; i++) {
+            const square = this.squares[i];
+            if (square.colides(x,y) || square.colides(x + SIZE,y + SIZE) || square.colides(x + SIZE,y) || square.colides(x,y + SIZE)) {
                 return true;
             }
         }
@@ -61,24 +91,28 @@ export default class Game {
 
     draw(ctx) {
         this.drawBackground(ctx);
-        this.circles.forEach((circle) => {
-            circle.draw(ctx, this.visible);
+        this.squares.forEach((square) => {
+            square.draw(ctx, this.visible);
         });
         this.drawUI(ctx);
     }
 
     drawUI(ctx) {
-        ctx.fillStyle = "#000000";
+        ctx.fillStyle = "#00FF00";
         ctx.font = '100 px serif';
         ctx.fillText("Point : +" + Math.round(this.point.toString()), 5, 40);
         
-        ctx.fillStyle = "#000000";
+        ctx.fillStyle = "#00FF00";
         ctx.font = '100 px serif';
         ctx.fillText("Score : " + Math.round(this.score.toString()), 5, 80);
 
-        ctx.fillStyle = "#000000";
+        ctx.fillStyle = "#00FF00";
         ctx.font = '100 px serif';
-        ctx.fillText("Best : " + Math.round(this.best.toString()), 5, 120);
+        ctx.fillText("Last : " + Math.round(this.lastScore.toString()), 5, 120);
+
+        ctx.fillStyle = "#00FF00";
+        ctx.font = '100 px serif';
+        ctx.fillText("Best : " + Math.round(this.best.toString()), 5, 160);
     }
 
     drawBackground(ctx) {
@@ -87,14 +121,14 @@ export default class Game {
     }
 
     click(x, y, ctx) {
-        for (let i = 0; i < this.circles.length; i++) {
-            const circle = this.circles[i];
-            if (circle.colides(x, y)) {
-                if (circle.number === this.currentNumber) {
+        for (let i = 0; i < this.squares.length; i++) {
+            const square = this.squares[i];
+            if (square.colides(x, y)) {
+                if (square.number === this.currentNumber) {
                     if (this.currentNumber === 1) {
                         this.visible = false;
                     }
-                    this.circles.splice(i, 1);
+                    this.squares.splice(i, 1);
                     this.currentNumber++;
                     this.checkWin();
                 } else {
@@ -109,21 +143,26 @@ export default class Game {
         if (this.score > this.best) {
             this.best = this.score;
         }
+        this.looseSound.play();
         this.saveStats();
         this.level = 1;
+        this.lastScore = this.score ? this.score : this.lastScore;
         this.score = 0;
-        this.reloadCircles();
+        this.reloadSquares();
     }
 
     checkWin() {
-        if (this.circles.length === 0) {
+        if (this.squares.length === 0) {
             this.level++;
             this.score += this.point;
             if (this.score > this.best) {
                 this.best = this.score;
             }
+            this.winSound.play();
             this.saveStats();
-            this.reloadCircles();
+            this.reloadSquares();
+        } else {
+            this.clickSound.play();
         }
     }
 
