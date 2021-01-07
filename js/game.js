@@ -4,7 +4,7 @@ import * as Conf from './conf.js'
 export default class Game {
     constructor(cookie) {
         this.loadSound();
-
+        this.musicStarted = false;
         this.cookie = cookie;
         this.background = "#000000";
         this.lastScore = 0;
@@ -25,8 +25,14 @@ export default class Game {
         console.log(path);
         this.gameSong = new Audio(path);
         this.gameSong.volume = 0.1;
+       
+    }
+
+    startMusic() {
+        this.musicStarted = true;
         this.gameSong.addEventListener("ended", function(){
             this.loadMusic();
+            this.startMusic();
        });
        this.gameSong.play();
     }
@@ -124,6 +130,9 @@ export default class Game {
         for (let i = 0; i < this.squares.length; i++) {
             const square = this.squares[i];
             if (square.colides(x, y)) {
+                if (!this.musicStarted) {
+                    this.startMusic();
+                }
                 if (square.number === this.currentNumber) {
                     if (this.currentNumber === 1) {
                         this.visible = false;
