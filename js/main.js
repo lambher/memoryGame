@@ -8,7 +8,7 @@ var signinButton = document.getElementById('signin');
 var modal = document.getElementById("modal");
 var myScore = document.getElementById("my_score");
 var span = document.getElementsByClassName("close")[0];
-
+var toggle = document.getElementById('mute');
 var ctx = canvas.getContext('2d');
 
 const cookie = new Cookie();
@@ -20,6 +20,7 @@ ctx.canvas.height = Conf.WINDOW_Y;
 
 canvas.addEventListener('click', onCanvasClick, false);
 saveButton.addEventListener('click', saveHighScore, false);
+toggle.addEventListener('click', toggleMusic, false);
 signinButton.addEventListener('click', signin, false);
 span.onclick = function() {
     modal.style.display = "none";
@@ -28,6 +29,16 @@ window.onclick = function(event) {
     myScore.innerHTML = "Your best score : " + game.getHighScore().toString();
     if (event.target == modal) {
       modal.style.display = "none";
+    }
+}
+
+
+function toggleMusic() {
+    game.toggleMusic();
+    if (game.musicOn) {
+        toggle.innerHTML = "Stop music";
+    } else {
+        toggle.innerHTML = "Play music";
     }
 }
 

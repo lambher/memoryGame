@@ -4,6 +4,7 @@ import * as Conf from './conf.js'
 export default class Game {
     constructor(cookie) {
         this.loadSound();
+        this.musicOn = true;
         this.musicStarted = false;
         this.cookie = cookie;
         this.background = "#000000";
@@ -30,11 +31,25 @@ export default class Game {
 
     startMusic() {
         this.musicStarted = true;
+        var self = this;
         this.gameSong.addEventListener("ended", function(){
-            this.loadMusic();
-            this.startMusic();
+            self.loadMusic();
+            self.startMusic();
        });
        this.gameSong.play();
+    }
+
+    toggleMusic() {
+        this.musicOn = !this.musicOn;
+        if (this.musicOn) {
+            this.startMusic();
+        } else {
+            this.gameSong.addEventListener("ended", function(){
+            });
+             this.gameSong.pause();
+        }
+
+       
     }
 
     getHighScore() {
