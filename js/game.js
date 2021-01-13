@@ -169,10 +169,29 @@ export default class Game {
         }
         this.looseSound.play();
         this.saveStats();
+        this.saveScore(this.score);
         this.level = 1;
         this.lastScore = this.score ? this.score : this.lastScore;
         this.score = 0;
         this.reloadSquares();
+    }
+
+    saveScore(score) {
+           const data = {
+            score : score
+        };
+    
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+        var theUrl = "http://memorygame.uno:7766/score";
+        xmlhttp.open("POST", theUrl);
+        xmlhttp.onreadystatechange = function() {
+            // if (this.readyState == 4 && this.status == 200 && this.response !== "not found") {
+            //     const resp = JSON.parse(this.response);
+            // }
+        }
+        xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlhttp.setRequestHeader("authorization", "Bearer " + this.token);
+        xmlhttp.send(JSON.stringify(data));
     }
 
     checkWin() {
