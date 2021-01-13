@@ -74,12 +74,12 @@ setInterval(loadScores, 10000);
 function loadScores() {
     // $.ajax({
     //     type: "GET",
-    //     url: "http://memorygame.uno:7766/scores",
+    //     url: "https://memorygame.uno:7766/scores",
     //     dataType: "json"
     //   });
 
       var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-      var theUrl = "http://memorygame.uno:7766/scores";
+      var theUrl = "https://memorygame.uno:7766/scores";
       xmlhttp.open("GET", theUrl);
       xmlhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200 && this.response !== "not found") {
@@ -104,7 +104,7 @@ function createAccount(name, email, password, score, callBack) {
     };
 
     var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-    var theUrl = "http://memorygame.uno:7766/connect";
+    var theUrl = "https://memorygame.uno:7766/connect";
     xmlhttp.open("POST", theUrl);
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200 && this.response !== "not found") {

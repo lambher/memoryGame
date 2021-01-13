@@ -182,7 +182,7 @@ export default class Game {
         };
     
         var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
-        var theUrl = "http://memorygame.uno:7766/score";
+        var theUrl = "https://memorygame.uno:7766/score";
         xmlhttp.open("POST", theUrl);
         xmlhttp.onreadystatechange = function() {
             // if (this.readyState == 4 && this.status == 200 && this.response !== "not found") {
